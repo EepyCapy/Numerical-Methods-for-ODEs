@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 # Explicit Euler method for 1st order ODEs
 def explicitEuler(y0: float, a: float, b: float, n: int, fprime: callable)->np.ndarray:
@@ -43,27 +42,21 @@ def rungeKutta2(y0: float, a: float, b: float, n: int, fprime: callable)->np.nda
     y = np.zeros((n + 1, 1))
     y[0] = y0
     for i in range(n):
-        k = y[i] + h * fprime(t, y[i])
-        y[i + 1] = y[i] + 0.5 * h * (fprime(t, y[i]) + fprime(t + h, k)) 
+        k1 = fprime(t, y[i])
+        k2 = fprime(t + h, y[i] + h * k1)
+        y[i + 1] = y[i] + 0.5 * h * (k1 + k2) 
         t = t + h
     return y.flatten()
 
-# Testing
-def func(t: float, y: float)->float:
-    return 2 - t + y
-
-N: int = 50
-A: float = 0.
-B: float = 1.
-y_init: float = 1.
-t: np.ndarray = np.linspace(A, B, N + 1)
-yExact: np.ndarray = 2 * np.exp(t) + t - 1
-yAppr1: np.ndarray = explicitEuler(y_init, A, B, N, func)
-yAppr2: np.ndarray = implicitEuler(y_init, A, B, N, func)
-yAppr3: np.ndarray = rungeKutta2(y_init, A, B, N, func)
-
-#plt.plot(t, yExact, color='blue')
-plt.plot(t, yExact - yAppr1, color='red')
-plt.plot(t, yExact - yAppr2, color='green')
-plt.plot(t, yExact - yAppr3, color='purple')
-plt.show()
+def rungeKutta3(y0: float, a: float, b: float, n: int, fprime: callable)->np.ndarray:
+    h = (b - a) / n
+    t = a 
+    y = np.zeros((n + 1, 1))
+    y[0] = y0
+    for i in range(n):
+        k1 = fprime(t, y[i])
+        k2 = fprime(t + h / 2, y[i] + h * k1 / 2)
+        k3 = fprime(t + h, y[i] - h * k1 + 2 * h * k2)
+        y[i + 1] = y[i] + h * (k1 + 4 * k2 + k3) / 6
+        t = t + h
+    return y.flatten()
