@@ -60,3 +60,17 @@ def rungeKutta3(y0: float, a: float, b: float, n: int, fprime: callable)->np.nda
         y[i + 1] = y[i] + h * (k1 + 4 * k2 + k3) / 6
         t = t + h
     return y.flatten()
+
+def rungeKutta4(y0: float, a: float, b: float, n: int, fprime: callable)->np.ndarray:
+    h = (b - a) / n
+    t = a 
+    y = np.zeros((n + 1, 1))
+    y[0] = y0
+    for i in range(n):
+        k1 = fprime(t, y[i])
+        k2 = fprime(t + h / 2, y[i] + h * k1 / 2)
+        k3 = fprime(t + h / 2, y[i] + h * k2 / 2)
+        k4 = fprime(t + h, y[i] + h * k3)
+        y[i + 1] = y[i] + h * (k1 + 2 * k2 + 2 * k3 + k4) / 6
+        t = t + h
+    return y.flatten()
