@@ -37,7 +37,26 @@ def solution3(t: float | np.ndarray)->float | np.ndarray:
 def f4(x: float, t: float)->float:
     return t * x
 
-# # Solution 4: x(t)=0.5*3**(1/6)*Gamma(2/3)*(sqrt(3) Ai(t) + Bi(t)) 
+# Solution 4: x(t)=0.5*3**(1/6)*Gamma(2/3)*(sqrt(3) Ai(t) + Bi(t)) 
 def solution4(t: float | np.ndarray)->float | np.ndarray:
     ai, bi = airy(t)[0], airy(t)[2]
     return 0.5 * 3**(1/6) * gamma(2/3) * (np.sqrt(3) * ai + bi) 
+
+# ODE 5 - Mass thrown upwards with no air resistance
+# z'' = g/m, z(0)=z0, z'(0)=v0
+def f5(z: float, t: float)->float:
+    g = 9.81
+    return -g 
+
+# Solution 5: z(t)=z0+v0*t-(g/m)*t**2
+def solution5(t: float | np.ndarray, z0: float, v0: float, g: float)->float | np.ndarray:
+    return z0 + v0 * t - 0.5 * g * t ** 2
+
+# ODE 6 - Another Airy Equation
+#  x'' + t * x = 0, x(-2)=Ai(2), x'(-2)=-Ai'(2)
+def f6(x: float, t: float)->float:
+    return -t * x
+
+# Solution 6: x(t)=Ai(-t)
+def solution6(t: float | np.ndarray)->float | np.ndarray:
+    return airy(-t)[0]
